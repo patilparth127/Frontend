@@ -1,0 +1,76 @@
+<mat-dialog-content>
+    <div *ngFor="let item of Datasource" >
+    <form [formGroup]="form"style="padding: 30px;" (ngSubmit)="onSubmit()">
+    <div>
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="example-full-width">        
+            <input matInput placeholder="Customer Name" formControlName="customerName">
+            <mat-error *ngIf="form.get('customerName')?.hasError('required')">Customer Name is required</mat-error>
+            <mat-error *ngIf="form.get('customerName')?.hasError('pattern')">
+              Customer Name must contain only letters and spaces
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Address" formControlName="address">
+            <mat-error *ngIf="form.get('address')?.hasError('required')">Address is required</mat-error>
+            <mat-error *ngIf="form.get('address')?.hasError('minlength')">
+              Address must be at least 10 characters long.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="example-full-width">
+            <mat-label>State</mat-label>
+            <mat-select formControlName="state" (selectionChange)="onStateChange()">
+              <mat-option *ngFor="let state of states" [value]="state">{{ state }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('state')?.hasError('required')">State is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field class="example-full-width">
+            <mat-label>City</mat-label>
+            <mat-select formControlName="city">
+              <mat-option *ngFor="let city of cities[form.get('state')?.value]" [value]="city">{{ city }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('city')?.hasError('required')">City is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field>
+            <ngx-mat-file-input formControlName="file" placeholder="Upload File" (change)="fileSelected($event)"></ngx-mat-file-input>
+            <mat-error *ngIf="form.get('file')?.hasError('required')">
+              Image is required
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <div class="col-md-6">
+          <mat-form-field class="example-full-width">
+            <input matInput [matDatepicker]="dobPicker" placeholder="DOB" formControlName="dob">
+            <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+            <mat-datepicker #dobPicker></mat-datepicker>
+            <mat-error *ngIf="form.get('dob')?.hasError('required')">DOB is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      
+    </div>
+    <div>   
+    </div>
+    
+        <mat-dialog-actions>
+          <button mat-raised-button color="primary" type="submit" mat-dialog-close>submit</button>
+          <button mat-raised-button color="primary" (click)=" this.dialogRef.close();" mat-dialog-close>close</button>
+        </mat-dialog-actions>
+    </form>
+    </div>
+  </mat-dialog-content>

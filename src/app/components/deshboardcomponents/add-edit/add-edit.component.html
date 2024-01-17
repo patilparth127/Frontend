@@ -1,0 +1,221 @@
+<section >
+
+  <mat-card class="example-card">
+    <div class="nosubmit">
+      <mat-form-field class="px-16" style="width: 100%">
+        <input class="nosubmit" matInput   #filter autocomplete="off" >
+      </mat-form-field>
+  </div>
+    <mat-card-header>
+      <mat-card-title>Customer Information</mat-card-title>
+      <mat-card-subtitle>Add New Coustoners <button
+        mat-icon-button
+        color="primary"
+        (click)="onToggleInputForm()"
+      >
+      <mat-icon *ngIf="!inputfromdeshboard">add</mat-icon>
+      <mat-icon *ngIf="inputfromdeshboard">remove</mat-icon>
+          </button> </mat-card-subtitle>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="inputfromdeshboard" class="beautiful-form">
+        <div class="form-container">
+          <div class="form-section">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="Customer Name"
+                formControlName="customerName"
+                required
+              />
+              <mat-error *ngIf="form.get('customerName')?.hasError('required')">
+                Customer Name is required
+              </mat-error>
+              <mat-error *ngIf="form.get('customerName')?.hasError('pattern')">
+                Customer Name must contain only letters and spaces
+              </mat-error>
+            </mat-form-field>
+      
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                placeholder="Address"
+                formControlName="address"
+                required
+              />
+              <mat-error *ngIf="form.get('address')?.hasError('required')">
+                Address is required
+              </mat-error>
+              <mat-error *ngIf="form.get('address')?.hasError('minlength')">
+                Address must be at least 10 characters long.
+              </mat-error>
+            </mat-form-field>
+          </div>
+      
+          <div class="form-section">
+            <mat-form-field class="full-width">
+              <mat-label>State</mat-label>
+              <mat-select
+                formControlName="state"
+                (selectionChange)="onStateChange()"
+                required
+              >
+                <mat-option *ngFor="let state of states" [value]="state">
+                  {{ state }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.get('state')?.hasError('required')">
+                State is required
+              </mat-error>
+            </mat-form-field>
+      
+            <mat-form-field class="full-width">
+              <mat-label>City</mat-label>
+              <mat-select formControlName="city" required>
+                <mat-option
+                  *ngFor="let city of cities[form.get('state')?.value]"
+                  [value]="city"
+                >
+                  {{ city }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.get('city')?.hasError('required')">
+                City is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+      
+          <div class="form-section">
+            <mat-form-field>
+              <ngx-mat-file-input
+                formControlName="file"
+                placeholder="Upload File"
+                (change)="fileSelected($event)"
+              ></ngx-mat-file-input>
+              <mat-error *ngIf="form.get('file')?.hasError('required')">
+                Image is required
+              </mat-error>
+            </mat-form-field>
+      
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                [matDatepicker]="dobPicker"
+                placeholder="DOB"
+                formControlName="dob"
+                required
+              />
+              <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+              <mat-datepicker #dobPicker></mat-datepicker>
+              <mat-error *ngIf="form.get('dob')?.hasError('required')">
+                DOB is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+      
+          <button mat-raised-button type="submit" color="primary">
+            Submit
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </form>
+      
+    </mat-card-content>
+  </mat-card>
+  
+
+
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Customer Data</mat-card-title>
+      <mat-card-subtitle>View and manage customer information</mat-card-subtitle>
+    </mat-card-header>
+  
+    <mat-card-content>
+      
+      <div *ngIf="dataSource">
+        <table
+        mat-table
+        [dataSource]="dataSource | filterpipe: 'customerName':filter.value"
+        class="mat-elevation-z8 center"
+        style="width: 100%; padding: 20px"
+      >
+        <ng-container matColumnDef="customerName">
+          <th mat-header-cell *matHeaderCellDef>Customer Name
+            
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.customerName }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td mat-cell *matCellDef="let element">{{ element.address }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef>State</th>
+          <td mat-cell *matCellDef="let element">{{ element.state }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="city">
+          <th mat-header-cell *matHeaderCellDef>City</th>
+          <td mat-cell *matCellDef="let element">{{ element.city }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="dob">
+          <th mat-header-cell *matHeaderCellDef>DOB</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.dob | date: 'd/M/y' }}</td>
+        </ng-container>
+  
+        <ng-container matColumnDef="file">
+          <th mat-header-cell *matHeaderCellDef>file</th>
+          <td mat-cell *matCellDef="let element">
+            <img
+            appAppFileHover
+              [src]="element.file"
+              alt="file"
+              style="height: 50px; width: 50px"
+            />
+          </td>
+        </ng-container>
+  
+        <!-- Column for displaying the Edit button -->
+        <ng-container matColumnDef="edit">
+          <th mat-header-cell *matHeaderCellDef>Edit</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="primary" (click)="openDilog(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef>
+            
+            Delete
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button color="warn" (click)="deleteItem(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          class="center"
+          showFirstLastButtons
+          aria-label="Select page of customer data"
+        ></mat-paginator>
+      </div>
+      <div *ngIf="!dataSource">
+        <p>No customer data available.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

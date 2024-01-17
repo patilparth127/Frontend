@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+        <mat-toolbar color="primary" class="example-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- Left side content (Menu button) -->
+            <div>
+              <button mat-icon-button (click)="snav.toggle()">
+                <mat-icon>menu</mat-icon>
+              </button>
+            </div>
+          <div class="appprofileimage" fxLayout="row" fxLayoutGap="30px">
+              <img type="image" src="../../../assets/icons/app.png" height="30px" width="30px">
+              <img type="image" src="../../../assets/icons/profile.png" height="28px" width="28px" [matMenuTriggerFor]="menu">
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="OnLogout()">Logout</button>
+              </mat-menu>
+            </div>
+          
+          </mat-toolbar>
+          
+          
+
+
+
+        <div class="menu" fxLayout="row" fxLayoutGap="20px">
+            <div class="note1" fxLayout="column" fxLayoutGap="20px" >
+                <a > <img class="noteimg" type="image" src="../../../assets/icons/lightbulb.svg" height="28px"
+                        width="28px"></a>
+
+                <a ><img class="noteimg" type="image" src="../../../assets/icons/notification.png" height="28px"
+                        width="28px"> </a>
+
+                <a  ><img class="noteimg" type="image"  src="../../../assets/icons/edit.svg" height="28px" 
+                        width="28px"> </a>
+
+                <a  ><img class="noteimg" type="image" src="../../../assets/icons/archive.svg" height="28px"
+                        width="28px"> </a>
+
+                <a   ><img class="noteimg" type="image" src="../../../assets/icons/delete.svg" height="28px"
+                        width="28px"> </a>
+            </div>
+            <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+                <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                    [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+                    <mat-nav-list>
+
+                        <mat-list role="list">
+                            <mat-list-item role="listitem" routerLink="./notes"> Notes</mat-list-item>
+                            <mat-list-item role="listitem">reminder</mat-list-item>
+                            <mat-list-item role="listitem">edit</mat-list-item>
+                            <mat-list-item role="listitem" routerLink="./archieve" >archive</mat-list-item>
+                            <mat-list-item role="listitem" routerLink="./trash" >trash</mat-list-item>
+                        </mat-list>
+                    </mat-nav-list>
+                </mat-sidenav>
+                <app-add-edit></app-add-edit>
+            </mat-sidenav-container>
+
+        </div>
+
+    </div>
+
+
+
+</div>
